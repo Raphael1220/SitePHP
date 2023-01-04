@@ -13,7 +13,14 @@ $fichier = "contact_".date('Y-m-d-H-i-s').".txt";
 
 $devise = $civilite.' '.$nom.' '.$prenom.' '.$email.' '.$raison.' '.$message;
 
-file_put_contents($fichier, $devise);
+if($submit || ((empty($civilite) || empty($nom ) || empty($prenom) || empty($email) || empty($raison) || empty($message)))){?>
+    <p>Veuillez remplir tous les champs !</p>
+<?php
+}
+
+else{
+    file_put_contents($fichier, $devise);
+}
 ?>
 
 
