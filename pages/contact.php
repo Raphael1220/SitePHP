@@ -1,25 +1,92 @@
 
 <?php
+//Variables des input
+$civilite = filter_input(INPUT_POST, 'civilite', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$nom = filter_input(INPUT_POST, 'nom', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$prenom = filter_input(INPUT_POST, 'prenom', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+$raison = filter_input(INPUT_POST, 'raison', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-$civilite = filter_input(INPUT_POST, 'civilite', FILTER_DEFAULT);
-$nom = filter_input(INPUT_POST, 'nom', FILTER_DEFAULT);
-$prenom = filter_input(INPUT_POST, 'prenom', FILTER_DEFAULT);
-$email = filter_input(INPUT_POST, 'email', FILTER_DEFAULT);
-$raison = filter_input(INPUT_POST, 'raison', FILTER_DEFAULT);
-$message = filter_input(INPUT_POST, 'message', FILTER_DEFAULT);
+//Variables de submit
 $submit = filter_input(INPUT_POST, 'submit', FILTER_DEFAULT);
 
-$fichier = "contact_".date('Y-m-d-H-i-s').".txt";
+//Variables radio et select
+$genre=['Homme','Femme'];
+$proposistion=['Proposition','Demande','Prestations'];
 
+//Variables de file_put_contents
+$fichier = "contact_".date('Y-m-d-H-i-s').".txt";
 $devise = $civilite.' '.$nom.' '.$prenom.' '.$email.' '.$raison.' '.$message;
 
-if($submit || ((empty($civilite) || empty($nom ) || empty($prenom) || empty($email) || empty($raison) || empty($message)))){?>
-    <p>Veuillez remplir tous les champs !</p>
-<?php
+$validation ='';
+
+//Vérifie si la civilité est correspondante aux varaibles définies
+if(in_array($civilite, $genre)){
+}
+else{
+     echo "la civilité n'est pas valide";
+     $validation = false;
 }
 
+// Vérifie si le nom n'a pas d'espaces
+if ($nom) {
+    $nom = trim($nom);
+    if ($nom === '') {
+        echo'Entrez votre nom';
+        $validation = false;
+    }
+} else {
+    echo'Entrez votre nom';
+    $validation = false;
+}
+
+// Vérifie si le prenom n'a pas d'espaces
+if ($prenom) {
+    $prenom = trim($prenom);
+    if ($prenom === '') {
+        echo'Entrez votre prenom';
+        $validation = false;
+    }
+} else {
+    echo'Entrez votre prenom';
+    $validation = false;
+}
+
+// Vérifie si le mail est valide
+if (!$email) {
+    echo"L'email n'est pas valide";
+    $validation = false;
+}
+
+//Vérifie si la raison est correspondante aux varaibles définies
+if(in_array($raison, $proposistion)){
+}
 else{
-    file_put_contents($fichier, $devise);
+    echo "la raison n'est pas valide";
+    $validation = false;
+}
+
+// Vérifie si le mail est valide est fait au moins 5 caracteres
+
+if(strlen($message) < 5){
+ echo 'Le message doit contenir au moins 5 caractères';
+    $validation = false;
+}
+
+// Si $validation est vrai alors nous pouvons ecrire dans le fichier
+if(!$validation){
+    // Si le formulaire n'est soumis ou qu les champs sont vide alors erreur sinon ecriture dans un fichier
+    if($submit || ((empty($civilite) || empty($nom ) || empty($prenom) || empty($email) || empty($raison) || empty($message)))){?>
+        <p>Veuillez remplir tous les champs !</p>
+        <?php
+    }
+    else{
+        file_put_contents($fichier, $devise);
+    }
+}
+else{
+    echo"C'est pas ca";
 }
 ?>
 
