@@ -12,6 +12,9 @@ switch ($recherche_page) {
     case "nomdelapage":
         include("pages/nomdelapage.php");
         break;
+    case "contact":
+        include("pages/contact.php");
+        break;
     default:
         include("pages/notfound.php");
 }
